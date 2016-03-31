@@ -9,13 +9,35 @@ from rpy2.robjects import pandas2ri
 import pandas.rpy.common as com
 import pandas as pd
 import numpy as np
-from deday_dev.util import prob_to_code
+
 %matplotlib inline
 %load_ext rpy2.ipython
 
 pd.set_option('display.precision', 3)
 plt.rcParams['font.family'] = 'Arial'
 pandas2ri.activate()
+
+def prob_to_code(v):
+    '''
+    Convert P values to significance codes:
+    less than 0.001: ***
+    (0.01, 0.001]  : **
+    (0.05, 0.01]   : *
+    (0.1, 0.05]    : +
+
+    prob_to_code(v)
+    v: float
+    '''
+    if   0.1  >v>=0.05:
+        return '+'
+    elif 0.05 >v>=0.01:
+        return '*'
+    elif 0.01 >v>=0.001:
+        return '**'
+    elif 0.001>v>=0:
+        return '***'
+    else:
+        return ''
 ```
 
     /Users/user/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:6: FutureWarning: The pandas.rpy module is deprecated and will be removed in a future version. We refer to external packages like rpy2. 
@@ -2440,6 +2462,8 @@ with open('All_tables.html', 'w') as f:
     f.write(all_tables.replace('NaN', ''))
 ```
 
+# Put all the figures into one pdf file
+
 
 ```python
 !ipython nbconvert Figures.ipynb --to markdown
@@ -2456,10 +2480,8 @@ with open('All_tables.html', 'w') as f:
     [NbConvertApp] Making directory Figures_files
     [NbConvertApp] Making directory Figures_files
     [NbConvertApp] Making directory Figures_files
-    [NbConvertApp] Writing 59992 bytes to Figures.md
+    [NbConvertApp] Writing 59956 bytes to Figures.md
 
-
-# Put all the figures into one pdf file
 
 
 ```python
